@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Workout Analyzer</title>
+    <!-- Tailwind CSS via CDN for quick development (will be swapped to compiled build later) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-indigo-600 text-white p-4 shadow">
+      <h1 class="text-2xl font-semibold text-center">AI Workout Analyzer</h1>
+    </header>
+
+    <main id="app" class="flex-grow container mx-auto p-4 space-y-8">
+      <!-- Input Form -->
+      <section class="bg-white rounded shadow p-6" id="input-section">
+        <h2 class="text-xl font-bold mb-4">Analyze Workouts</h2>
+        <form id="analyze-form" class="space-y-4">
+          <!-- Dynamic URL inputs -->
+          <div id="url-fields" class="space-y-2">
+            <!-- URL input template inserted by JS -->
+          </div>
+          <button type="button" id="add-url" class="text-indigo-600 hover:underline text-sm">
+            + Add another URL
+          </button>
+
+          <!-- Preferences -->
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="flex flex-col">
+              <label class="font-medium" for="goal">Fitness Goal</label>
+              <textarea
+                id="goal"
+                class="border rounded p-2"
+                rows="2"
+                placeholder="e.g., Build muscle, lose fat"
+              ></textarea>
+            </div>
+            <div class="flex flex-col">
+              <label class="font-medium" for="experience">Experience Level</label>
+              <select id="experience" class="border rounded p-2">
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+            <div class="flex flex-col">
+              <label class="font-medium" for="time">Available Time per Workout</label>
+              <select id="time" class="border rounded p-2">
+                <option>30min</option>
+                <option>30-45min</option>
+                <option>45-60min</option>
+                <option>60+min</option>
+              </select>
+            </div>
+            <div class="flex flex-col">
+              <label class="font-medium" for="equipment">Available Equipment</label>
+              <textarea
+                id="equipment"
+                class="border rounded p-2"
+                rows="2"
+                placeholder="e.g., Dumbbells, resistance bands"
+              ></textarea>
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <label class="font-medium" for="notes">Additional Preferences / Notes</label>
+            <textarea id="notes" class="border rounded p-2" rows="3"></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700"
+          >
+            Generate Plan
+          </button>
+        </form>
+      </section>
+
+      <!-- Results -->
+      <section id="results-section" class="hidden bg-white rounded shadow p-6">
+        <h2 class="text-xl font-bold mb-4">Workout Plan</h2>
+        <pre id="plan-output" class="whitespace-pre-wrap mb-4"></pre>
+        <div class="flex gap-4">
+          <button id="copy-btn" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+            Copy to Clipboard
+          </button>
+          <button id="download-btn" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+            Download .txt
+          </button>
+        </div>
+        <h3 class="text-lg font-semibold mt-6">Summary</h3>
+        <p id="summary-output" class="mt-2"></p>
+        <div class="mt-4 flex gap-4 items-center">
+          <span class="font-medium">Was this plan helpful?</span>
+          <button id="thumbs-up" class="text-2xl">👍</button>
+          <button id="thumbs-down" class="text-2xl">👎</button>
+        </div>
+      </section>
+
+      <!-- History (placeholder) -->
+      <section id="history-section" class="hidden bg-white rounded shadow p-6">
+        <h2 class="text-xl font-bold mb-4">Previous Analyses</h2>
+        <ul id="history-list" class="space-y-2"></ul>
+      </section>
+    </main>
+
+    <footer class="text-center text-sm text-gray-500 py-4">Built with ❤️ and AI</footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
