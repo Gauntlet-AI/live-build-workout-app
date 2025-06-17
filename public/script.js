@@ -14,6 +14,7 @@ const copyBtn = document.getElementById('copy-btn')
 const downloadBtn = document.getElementById('download-btn')
 const thumbsUpBtn = document.getElementById('thumbs-up')
 const thumbsDownBtn = document.getElementById('thumbs-down')
+const toastEl = document.getElementById('toast')
 let lastTimestamp = null
 
 // Utility to create a URL input field
@@ -95,11 +96,28 @@ analyzeForm.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-    if (!resp.ok) throw new Error(await resp.text())
+    if (!resp.ok) {
+      const errText = await resp.text()
+      showToast('Server error: ' + errText)
+      throw new Error(errText)
+    }
     const json = await resp.json()
     planOutput.textContent = json.plan
     summaryOutput.textContent = json.summary
     resultsSection.classList.remove('hidden')
+
+    // Check for scraping failures
+    if (json.processedUrls) {
+      const failed = json.processedUrls.filter((u) => !u.success).map((u) => u.url)
+      if (failed.length === json.processedUrls.length) {
+        showToast(
+          'All URLs failed to scrape. You may input different URLs or paste workout text manually.',
+          'error'
+        )
+      } else if (failed.length) {
+        showToast(`Some URLs failed to scrape: ${failed.join(', ')}`, 'error')
+      }
+    }
 
     lastTimestamp = Date.now()
     await fetch('/api/save', {
@@ -112,10 +130,14 @@ analyzeForm.addEventListener('submit', async (e) => {
     thumbsUpBtn.disabled = false
     thumbsDownBtn.disabled = false
 
+    showToast('Workout plan generated!', 'success')
+
     loadHistory()
   } catch (err) {
     console.error(err)
-    alert('Error generating workout plan. See console for details.')
+    if (err.message.includes('Failed to fetch')) {
+      showToast('Network error: cannot reach server. Check your connection.', 'error')
+    }
   } finally {
     setLoading(false)
   }
@@ -162,7 +184,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const prefs = data.preferences || {}
     document.getElementById('goal').value = prefs.goal || ''
     document.getElementById('experience').value = prefs.experience || 'Beginner'
-    document.getElementById('time').value = prefs.time || '30min'
+    document.getElementById('time').value = prefs.time || '30'
     document.getElementById('equipment').value = prefs.equipment || ''
     document.getElementById('notes').value = prefs.notes || ''
   } catch (err) {
@@ -206,3 +228,13 @@ function sendFeedback(rating) {
 
 thumbsUpBtn.addEventListener('click', () => sendFeedback(1))
 thumbsDownBtn.addEventListener('click', () => sendFeedback(-1))
+
+function showToast(message, type = 'error') {
+  toastEl.textContent = message
+  toastEl.classList.remove('hidden')
+  toastEl.classList.toggle('bg-red-500', type === 'error')
+  toastEl.classList.toggle('bg-green-600', type === 'success')
+  setTimeout(() => {
+    toastEl.classList.add('hidden')
+  }, 3000)
+}

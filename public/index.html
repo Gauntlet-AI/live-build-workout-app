@@ -12,6 +12,12 @@
       <h1 class="text-2xl font-semibold text-center">AI Workout Analyzer</h1>
     </header>
 
+    <!-- Toast notification -->
+    <div
+      id="toast"
+      class="hidden fixed top-4 left-1/2 -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow z-50"
+    ></div>
+
     <main id="app" class="flex-grow container mx-auto p-4 space-y-8">
       <!-- Input Form -->
       <section class="bg-white rounded shadow p-6" id="input-section">
@@ -47,10 +53,13 @@
             <div class="flex flex-col">
               <label class="font-medium" for="time">Available Time per Workout</label>
               <select id="time" class="border rounded p-2">
-                <option>30min</option>
-                <option>30-45min</option>
-                <option>45-60min</option>
-                <option>60+min</option>
+                <option value="5">5 min</option>
+                <option value="10">10 min</option>
+                <option value="15">15 min</option>
+                <option value="20">20 min</option>
+                <option value="30" selected>30 min</option>
+                <option value="45">45 min</option>
+                <option value="60">60 min</option>
               </select>
             </div>
             <div class="flex flex-col">
